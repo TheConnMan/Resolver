@@ -5,15 +5,17 @@
 prog="./injector.sh"
 
 usage() {
-	echo "Usage: $prog [-r root] [-d dist]"
+	echo "Usage: $prog [-r root] [-d dist] [-f]"
 	echo "       $prog -h for help."
+	exit
 }
 
 showhelp() {
-	echo "Usage: $prog: [-r root] [-d dist]"
+	echo "Usage: $prog: [-r root] [-d dist] [-f]"
 	echo "Injector: HTML injection for server-less applications"
 	echo "  -r: root HTML directory to be crawled recursively"
 	echo "  -d: distribution directory"
+	echo "  -f: force overwrite distribution directory"
 	echo "  -h: this help message"
 }
 
@@ -21,13 +23,15 @@ showhelp() {
 
 root=.
 dist=./dist
+force=false
 
 # Get arguments
 
-while getopts "r:d:h" name; do
+while getopts "fr:d:h" name; do
 	case $name in
 		r)  root=$OPTARG;;
 		d)  dist=$OPTARG;;
+		f)  force=true;;
 		h)  showhelp $0;;
 		[?])  usage $0;;
 	esac
@@ -40,9 +44,10 @@ resolvefile() {
 	# Check to see if file has already been resolved
 	if [[ ! -f $loc ]]; then
 	
-		# Create folver and blank file
+		# Create folder and blank file
 		mkdir -p $(dirname $loc)
 		touch $loc
+		echo "Resolving ${1#$root}"
 		
 		while read line || [[ -n "$line" ]]; do
 			if [[ $line == *"<% injector"* ]]; then
@@ -63,6 +68,17 @@ resolvefile() {
 }
 
 # Delete distribution directory
+
+if [[ ( -d $dist ) && ( $force == "false" ) ]]; then
+	echo "The distribution folder $dist is not empty and will be deleted. Would you like to continue (yes/no)? [no]"
+	read choice
+	
+	if [[ $choice != "yes" ]]; then
+		echo "Exiting"
+		exit
+	fi
+fi
+
 rm -rf $dist/*
 mkdir -p $dist
 
