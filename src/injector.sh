@@ -31,23 +31,28 @@ done
 
 resolvefile() {
 	local loc=$dist${1#$root}
-	mkdir -p $(dirname $loc)
-	rm $loc
-	touch $loc
-	while read in; do
-		if [[ $in == *"<% injector"* ]]; then
-			local depen=`expr "$in" : '^.*src="\(.*\)".*'`
-			cat $root$depen >> $loc;
-		else
-			echo $in >> $loc;
-		fi
-	done < $1
+	if [[ ! -f $loc ]]; then
+		mkdir -p $(dirname $loc)
+		touch $loc
+		while read line || [[ -n "$line" ]]; do
+			if [[ $line == *"<% injector"* ]]; then
+				local depen=`expr "$line" : '^.*src="\(.*\)".*'`
+				if [ ! -f $dist$depen ]; then
+					resolvefile $root$depen
+				fi
+				cat $dist$depen >> $loc;
+			else
+				echo $line >> $loc;
+			fi
+		done < $1
+	fi
 }
 
+rm -rf $dist/*
 mkdir -p $dist
 
 for f in $(find $root -name "*"); do
-	if test -f $f; then
+	if [ -f $f ]; then
 		resolvefile $f;
 	fi
 done
