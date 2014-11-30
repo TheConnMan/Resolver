@@ -2,7 +2,7 @@
 # HTML injection for server-less applications
 # brian@theconnman.com
 
-prog="./injector.sh"
+prog="./injector"
 
 usage() {
 	echo "Usage: $prog [-r root] [-d dist] [-f]"
