@@ -29,4 +29,25 @@ while getopts "r:d:h" name; do
 	esac
 done
 
+resolvefile() {
+	local loc=$dist${1#$root}
+	mkdir -p $(dirname $loc)
+	rm $loc
+	touch $loc
+	while read in; do
+		if [[ $in == *"<% injector"* ]]; then
+			local depen=`expr "$in" : '^.*src="\(.*\)".*'`
+			cat $root$depen >> $loc;
+		else
+			echo $in >> $loc;
+		fi
+	done < $1
+}
+
 mkdir -p $dist
+
+for f in $(find $root -name "*"); do
+	if test -f $f; then
+		resolvefile $f;
+	fi
+done
