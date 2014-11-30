@@ -17,8 +17,12 @@ showhelp() {
 	echo "  -h: this help message"
 }
 
+# Initialize variables and define defaults
+
 root=.
 dist=./dist
+
+# Get arguments
 
 while getopts "r:d:h" name; do
 	case $name in
@@ -29,14 +33,24 @@ while getopts "r:d:h" name; do
 	esac
 done
 
+# Resolves injections within a single file
 resolvefile() {
 	local loc=$dist${1#$root}
+	
+	# Check to see if file has already been resolved
 	if [[ ! -f $loc ]]; then
+	
+		# Create folver and blank file
 		mkdir -p $(dirname $loc)
 		touch $loc
+		
 		while read line || [[ -n "$line" ]]; do
 			if [[ $line == *"<% injector"* ]]; then
+			
+				# Find injected file location
 				local depen=`expr "$line" : '^.*src="\(.*\)".*'`
+				
+				# Resolve injected file if it hasn't been already
 				if [ ! -f $dist$depen ]; then
 					resolvefile $root$depen
 				fi
@@ -48,9 +62,11 @@ resolvefile() {
 	fi
 }
 
+# Delete distribution directory
 rm -rf $dist/*
 mkdir -p $dist
 
+# Resolve all files in the source directory
 for f in $(find $root -name "*"); do
 	if [ -f $f ]; then
 		resolvefile $f;
