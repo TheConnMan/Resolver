@@ -1,6 +1,7 @@
 #!/bin/bash
 # HTML injection for server-less applications
 # brian@theconnman.com
+# Version 1.0.0
 
 prog="./injector"
 
