@@ -23,7 +23,7 @@ showhelp() {
 # Initialize variables and define defaults
 
 root=.
-dist=./dist
+dist=dist/
 force=false
 
 # Get arguments
