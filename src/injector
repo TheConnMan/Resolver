@@ -1,6 +1,7 @@
 #!/bin/bash
 # HTML injection for server-less applications
 # brian@theconnman.com
+# Version 1.0.1
 
 prog="./injector"
 
@@ -22,7 +23,7 @@ showhelp() {
 # Initialize variables and define defaults
 
 root=.
-dist=./dist
+dist=dist/
 force=false
 
 # Get arguments
