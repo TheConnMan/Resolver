@@ -35,10 +35,9 @@ There is a set of example pages under the **example** folder to help with the HT
 
 To compile the finished HTML run the `injection` command. Below is a list of the command options.
 
-Usage: `injector [-r root] [-d dist] [-f]`
+Usage: `injector [-r root] [-d dist]`
 - -r: root HTML directory to be crawled recursively
 - -d: distribution directory
-- -f: force overwrite distribution directory
 - -h: help
 
 ## Support

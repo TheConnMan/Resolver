@@ -6,7 +6,7 @@
 prog="./injector"
 
 usage() {
-	echo "Usage: $prog [-r root] [-d dist] [-f]"
+	echo "Usage: $prog [-r root] [-d dist]"
 	echo "       $prog -h for help."
 	exit
 }
@@ -16,7 +16,6 @@ showhelp() {
 	echo "Injector: HTML injection for server-less applications"
 	echo "  -r: root HTML directory to be crawled recursively"
 	echo "  -d: distribution directory"
-	echo "  -f: force overwrite distribution directory"
 	echo "  -h: this help message"
 }
 
@@ -24,7 +23,6 @@ showhelp() {
 
 root=.
 dist=dist/
-force=false
 
 # Get arguments
 
@@ -32,7 +30,6 @@ while getopts "fr:d:h" name; do
 	case $name in
 		r)  root=$OPTARG;;
 		d)  dist=$OPTARG;;
-		f)  force=true;;
 		h)  showhelp $0;;
 		[?])  usage $0;;
 	esac
@@ -68,20 +65,15 @@ resolvefile() {
 	fi
 }
 
-# Delete distribution directory
-
-if [[ ( -d $dist ) && ( $force == "false" ) ]]; then
-	echo "The distribution folder $dist is not empty and will be deleted. Would you like to continue (yes/no)? [no]"
-	read choice
-	
-	if [[ $choice != "yes" ]]; then
-		echo "Exiting"
-		exit
-	fi
-fi
-
-rm -rf $dist/*
+# Make distribution directory
 mkdir -p $dist
+
+# Remove old files
+for f in $(find $root -name "*"); do
+	if [ -f $f ]; then
+		rm -f $dist${f#$root};
+	fi
+done
 
 # Resolve all files in the source directory
 for f in $(find $root -name "*"); do
