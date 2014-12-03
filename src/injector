@@ -60,7 +60,7 @@ done
 
 # Resolves injections within a single file
 resolvefile() {
-	local loc=$dist${1#$root}
+	local loc=$dist/${1#$root}
 	
 	# Check to see if file has already been resolved
 	if [[ ! -f $loc ]]; then
@@ -79,10 +79,10 @@ resolvefile() {
 				local depen=`expr "$line" : '^.*src="\(.*\)".*'`
 				
 				# Resolve injected file if it hasn't been already
-				if [ ! -f $dist$depen ]; then
+				if [ ! -f $dist/$depen ]; then
 					resolvefile $root$depen
 				fi
-				cat $dist$depen >> $loc;
+				cat $dist/$depen >> $loc;
 			else
 				echo $line >> $loc;
 			fi
@@ -91,7 +91,7 @@ resolvefile() {
 }
 
 # Make distribution directory
-mkdir -p $dist
+mkdir -p $dist/
 
 if [[ $watch == true ]]; then
 	chsum1=""
