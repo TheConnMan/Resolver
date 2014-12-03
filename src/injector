@@ -1,23 +1,24 @@
 #!/bin/bash
 # HTML injection for server-less applications
 # brian@theconnman.com
-# Version 1.1.0
+# Version 1.1.1
 
 prog="./injector"
 
 usage() {
-	echo "Usage: $prog [-r root] [-d dist] [-wv]"
+	echo "Usage: $prog [-r root] [-d dist] [-kwv]"
 	echo "       $prog -h for help."
 	exit
 }
 
 showhelp() {
-	echo "Usage: $prog: [-r root] [-d dist] [-f]"
+	echo "Usage: $prog: [-r root] [-d dist] [-kwv]"
 	echo "Injector: HTML injection for server-less applications"
 	echo "  -r: root HTML directory to be crawled recursively"
 	echo "  -d: distribution directory"
+	echo "  -k: keep injected files"
 	echo "  -w: watch root directory for changes"
-	echo "  -v: verbose"
+	echo "  -v: verbose output"
 	echo "  -h: this help message"
 }
 
@@ -39,19 +40,28 @@ refresh() {
 	done
 }
 
+layouts() {
+	for f in $(find $root -type f -print | xargs grep -h "<% injector" | sed -n 's/.*src="\(.*\)".*/\1/p'); do
+		rm -f $dist/$f
+	done
+	find $dist -type d -empty -exec rmdir {} \;
+}
+
 # Initialize variables and define defaults
 root=.
 dist=dist/
+keep=false
 watch=false
 verbose=false
 
 # Get arguments
 
-while getopts "wvr:d:h" name; do
+while getopts "kwvr:d:h" name; do
 	case $name in
 		r)  root=$OPTARG;;
 		d)  dist=$OPTARG;;
 		h)  showhelp $0;;
+		k)  keep=true;;
 		w)  watch=true;;
 		v)  verbose=true;;
 		[?])  usage $0;;
@@ -60,7 +70,7 @@ done
 
 # Resolves injections within a single file
 resolvefile() {
-	local loc=$dist${1#$root}
+	local loc=$dist/${1#$root}
 	
 	# Check to see if file has already been resolved
 	if [[ ! -f $loc ]]; then
@@ -79,10 +89,10 @@ resolvefile() {
 				local depen=`expr "$line" : '^.*src="\(.*\)".*'`
 				
 				# Resolve injected file if it hasn't been already
-				if [ ! -f $dist$depen ]; then
+				if [ ! -f $dist/$depen ]; then
 					resolvefile $root$depen
 				fi
-				cat $dist$depen >> $loc;
+				cat $dist/$depen >> $loc;
 			else
 				echo $line >> $loc;
 			fi
@@ -91,7 +101,7 @@ resolvefile() {
 }
 
 # Make distribution directory
-mkdir -p $dist
+mkdir -p $dist/
 
 if [[ $watch == true ]]; then
 	chsum1=""
@@ -107,4 +117,8 @@ if [[ $watch == true ]]; then
     done
 else
 	refresh
+fi
+
+if [[ $keep == false ]]; then
+	layouts
 fi
