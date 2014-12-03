@@ -1,12 +1,12 @@
 #!/bin/bash
 # HTML injection for server-less applications
 # brian@theconnman.com
-# Version 1.0.1
+# Version 1.1.0
 
 prog="./injector"
 
 usage() {
-	echo "Usage: $prog [-r root] [-d dist] [-f]"
+	echo "Usage: $prog [-r root] [-d dist] [-wv]"
 	echo "       $prog -h for help."
 	exit
 }
@@ -16,24 +16,44 @@ showhelp() {
 	echo "Injector: HTML injection for server-less applications"
 	echo "  -r: root HTML directory to be crawled recursively"
 	echo "  -d: distribution directory"
-	echo "  -f: force overwrite distribution directory"
+	echo "  -w: watch root directory for changes"
+	echo "  -v: verbose"
 	echo "  -h: this help message"
 }
 
-# Initialize variables and define defaults
+refresh() {
+	echo -e "\nRefreshing"
 
+	# Remove old files
+	for f in $(find $root -name "*"); do
+		if [ -f $f ]; then
+			rm -f $dist${f#$root};
+		fi
+	done
+	
+	# Resolve all files in the source directory
+	for f in $(find $root -name "*"); do
+		if [ -f $f ]; then
+			resolvefile $f;
+		fi
+	done
+}
+
+# Initialize variables and define defaults
 root=.
 dist=dist/
-force=false
+watch=false
+verbose=false
 
 # Get arguments
 
-while getopts "fr:d:h" name; do
+while getopts "wvr:d:h" name; do
 	case $name in
 		r)  root=$OPTARG;;
 		d)  dist=$OPTARG;;
-		f)  force=true;;
 		h)  showhelp $0;;
+		w)  watch=true;;
+		v)  verbose=true;;
 		[?])  usage $0;;
 	esac
 done
@@ -48,7 +68,9 @@ resolvefile() {
 		# Create folder and blank file
 		mkdir -p $(dirname $loc)
 		touch $loc
-		echo "Resolving ${1#$root}"
+		if [[ $verbose == true ]]; then
+			echo "Resolving ${1#$root}"
+		fi
 		
 		while read line || [[ -n "$line" ]]; do
 			if [[ $line == *"<% injector"* ]]; then
@@ -68,24 +90,21 @@ resolvefile() {
 	fi
 }
 
-# Delete distribution directory
-
-if [[ ( -d $dist ) && ( $force == "false" ) ]]; then
-	echo "The distribution folder $dist is not empty and will be deleted. Would you like to continue (yes/no)? [no]"
-	read choice
-	
-	if [[ $choice != "yes" ]]; then
-		echo "Exiting"
-		exit
-	fi
-fi
-
-rm -rf $dist/*
+# Make distribution directory
 mkdir -p $dist
 
-# Resolve all files in the source directory
-for f in $(find $root -name "*"); do
-	if [ -f $f ]; then
-		resolvefile $f;
-	fi
-done
+if [[ $watch == true ]]; then
+	chsum1=""
+	
+	while [[ true ]]
+    do
+        chsum2=`find $root -type f -exec md5sum {} \;`
+        if [[ $chsum1 != $chsum2 ]] ; then           
+            refresh
+            chsum1=$chsum2
+        fi
+        sleep 2
+    done
+else
+	refresh
+fi
