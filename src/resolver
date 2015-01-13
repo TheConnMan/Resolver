@@ -2,7 +2,7 @@
 # Resolver
 # HTML resolution for server-less applications
 # brian@theconnman.com
-# Version 1.1.1
+# Version 1.1.2
 
 prog="./resolver"
 
