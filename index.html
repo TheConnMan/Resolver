@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Injector by TheConnMan</title>
+    <title>Resolver by TheConnMan</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -20,9 +20,9 @@
   <body>
       <div id="header">
         <nav>
-          <li class="fork"><a href="https://github.com/TheConnMan/Injector">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/TheConnMan/Injector/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/TheConnMan/Injector/tarball/master">TAR</a></li>
+          <li class="fork"><a href="https://github.com/TheConnMan/Resolver">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/TheConnMan/Resolver/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/TheConnMan/Resolver/tarball/master">TAR</a></li>
           <li class="title">DOWNLOADS</li>
         </nav>
       </div><!-- end header -->
@@ -31,7 +31,7 @@
 
       <section>
         <div id="title">
-          <h1>Injector</h1>
+          <h1>Resolver</h1>
           <p></p>
           <hr>
           <span class="credits left">Project maintained by <a href="https://github.com/TheConnMan">TheConnMan</a></span>
@@ -39,14 +39,14 @@
         </div>
 
         <h1>
-<a id="injector" class="anchor" href="#injector" aria-hidden="true"><span class="octicon octicon-link"></span></a>Injector</h1>
+<a id="resolver" class="anchor" href="#resolver" aria-hidden="true"><span class="octicon octicon-link"></span></a>Resolver</h1>
 
 <p>Bash script for HTML dependency resolution within server-less applications.</p>
 
 <h2>
 <a id="description" class="anchor" href="#description" aria-hidden="true"><span class="octicon octicon-link"></span></a>Description</h2>
 
-<p><strong>Injector</strong> is especially helpful for developers used to having a main header or footer file which is included on all pages, but are developing a server-less application. <strong>Injector</strong> allows web developers to have abstracted out portions of pages which occur on multiple pages, but only have to be maintained in a single location. These HTML snippets are then injected into the HTML pages, creating a set of full HTML pages without the maintenance nightmare of normal HTML apps.</p>
+<p><strong>Resolver</strong> is especially helpful for developers used to having a main header or footer file which is included on all pages, but are developing a server-less application. <strong>Resolver</strong> allows web developers to have abstracted out portions of pages which occur on multiple pages, but only have to be maintained in a single location. These HTML snippets are then injected into the HTML pages, creating a set of full HTML pages without the maintenance nightmare of normal HTML apps.</p>
 
 <h2>
 <a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h2>
@@ -58,31 +58,31 @@
 <h2>
 <a id="installing" class="anchor" href="#installing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installing</h2>
 
-<p>To install download the <a href="https://github.com/TheConnMan/Injector/archive/master.zip">latest version</a> and extract <code>injector</code> into a permanant location. You can also move <code>injector</code> to a location in your path for convenience.</p>
+<p>To install download the <a href="https://github.com/TheConnMan/Resolver/archive/master.zip">latest version</a> and extract <code>resolver</code> into a permanant location. You can also move <code>resolver</code> to a location in your path for convenience.</p>
 
 <h2>
 <a id="use" class="anchor" href="#use" aria-hidden="true"><span class="octicon octicon-link"></span></a>Use</h2>
 
 <h3>
-<a id="html-injection" class="anchor" href="#html-injection" aria-hidden="true"><span class="octicon octicon-link"></span></a>HTML Injection</h3>
+<a id="html-resolution" class="anchor" href="#html-resolution" aria-hidden="true"><span class="octicon octicon-link"></span></a>HTML Resolution</h3>
 
-<p><strong>Injector</strong> uses a conventional tag to denote injected files shown below:</p>
+<p><strong>Resolver</strong> uses a conventional tag to denote injected files shown below:</p>
 
-<pre><code>&lt;% injector src="relative/path/to/my/file.html" %&gt;
+<pre><code>&lt;% resolver src="relative/path/to/my/file.html" %&gt;
 </code></pre>
 
-<p>These file locations are all relative to the <strong>root</strong> (see options below) of the app, so even if a file references another file within its same subfolder the relative path will still include the subfolder of both files. An example of this can be found in the <a href="https://github.com/TheConnMan/Injector/blob/master/example/layouts/menu.html">example menu layout</a> which includes the <a href="https://github.com/TheConnMan/Injector/blob/master/example/layouts/submenu.html">example submenu layout</a> which is in the same folder.</p>
+<p>These file locations are all relative to the <strong>root</strong> (see options below) of the app, so even if a file references another file within its same subfolder the relative path will still include the subfolder of both files. An example of this can be found in the <a href="https://github.com/TheConnMan/Resolver/blob/master/example/layouts/menu.html">example menu layout</a> which includes the <a href="https://github.com/TheConnMan/Resolver/blob/master/example/layouts/submenu.html">example submenu layout</a> which is in the same folder.</p>
 
 <p>Files are recursively resolved, so if an injected file also contains dependencies they will be resolved before injection.</p>
 
-<p>There is a set of example pages under the <strong>example</strong> folder to help with the HTML syntax. It can also be used to try out <strong>Injector</strong> before full use.</p>
+<p>There is a set of example pages under the <strong>example</strong> folder to help with the HTML syntax. It can also be used to try out <strong>Resolver</strong> before full use.</p>
 
 <h2>
 <a id="dependency-resolution" class="anchor" href="#dependency-resolution" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependency Resolution</h2>
 
-<p>To compile the finished HTML run the <code>injection</code> command. Below is a list of the command options.</p>
+<p>To compile the finished HTML run the <code>resolver</code> command. Below is a list of the command options.</p>
 
-<p>Usage: <code>injector [-r root] [-d dist] [-kwv]</code></p>
+<p>Usage: <code>resolver [-r root] [-d dist] [-kwv]</code></p>
 
 <ul>
 <li>-r: root HTML directory to be crawled recursively</li>
@@ -96,7 +96,7 @@
 <h2>
 <a id="support" class="anchor" href="#support" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support</h2>
 
-<p>Please use <a href="https://github.com/TheConnMan/Injector/issues">GitHub Issues</a> to recommend additions or report bugs.</p>
+<p>Please use <a href="https://github.com/TheConnMan/Resolver/issues">GitHub Issues</a> to recommend additions or report bugs.</p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
