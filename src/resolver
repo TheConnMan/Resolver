@@ -1,9 +1,10 @@
 #!/bin/bash
-# HTML injection for server-less applications
+# Resolver
+# HTML resolution for server-less applications
 # brian@theconnman.com
-# Version 1.1.1
+# Version 1.1.2
 
-prog="./injector"
+prog="./resolver"
 
 usage() {
 	echo "Usage: $prog [-r root] [-d dist] [-kwv]"
@@ -13,13 +14,14 @@ usage() {
 
 showhelp() {
 	echo "Usage: $prog: [-r root] [-d dist] [-kwv]"
-	echo "Injector: HTML injection for server-less applications"
+	echo "Resolver: HTML resolution for server-less applications"
 	echo "  -r: root HTML directory to be crawled recursively"
 	echo "  -d: distribution directory"
-	echo "  -k: keep injected files"
+	echo "  -k: keep resolved files"
 	echo "  -w: watch root directory for changes"
 	echo "  -v: verbose output"
 	echo "  -h: this help message"
+	exit
 }
 
 refresh() {
@@ -41,7 +43,7 @@ refresh() {
 }
 
 layouts() {
-	for f in $(find $root -type f -print | xargs grep -h "<% injector" | sed -n 's/.*src="\(.*\)".*/\1/p'); do
+	for f in $(find $root -type f -print | xargs grep -h "<% resolver" | sed -n 's/.*src="\(.*\)".*/\1/p'); do
 		rm -f $dist/$f
 	done
 	find $dist -type d -empty -exec rmdir {} \;
@@ -83,9 +85,8 @@ resolvefile() {
 		fi
 		
 		while read line || [[ -n "$line" ]]; do
-			if [[ $line == *"<% injector"* ]]; then
-			
-				# Find injected file location
+			if [[ $line == *"<% resolver"* ]]; then
+				# Find resolved file location
 				local depen=`expr "$line" : '^.*src="\(.*\)".*'`
 				
 				# Resolve injected file if it hasn't been already
@@ -94,7 +95,7 @@ resolvefile() {
 				fi
 				cat $dist/$depen >> $loc;
 			else
-				echo $line >> $loc;
+				echo "$line" >> $loc;
 			fi
 		done < $1
 	fi
