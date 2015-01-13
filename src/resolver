@@ -1,6 +1,6 @@
 #!/bin/bash
-# Injector
-# HTML injection for server-less applications
+# Resolver
+# HTML resolution for server-less applications
 # brian@theconnman.com
 # Version 1.1.1
 
@@ -43,7 +43,7 @@ refresh() {
 }
 
 layouts() {
-	for f in $(find $root -type f -print | xargs grep -h "<% injector" | sed -n 's/.*src="\(.*\)".*/\1/p'); do
+	for f in $(find $root -type f -print | xargs grep -h "<% resolver" | sed -n 's/.*src="\(.*\)".*/\1/p'); do
 		rm -f $dist/$f
 	done
 	find $dist -type d -empty -exec rmdir {} \;
