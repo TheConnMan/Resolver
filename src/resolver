@@ -91,7 +91,7 @@ resolvefile() {
 				
 				# Resolve injected file if it hasn't been already
 				if [ ! -f $dist/$depen ]; then
-					resolvefile $root$depen
+					resolvefile $root/$depen
 				fi
 				cat $dist/$depen >> $loc;
 			else
